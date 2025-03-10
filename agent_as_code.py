@@ -1,37 +1,24 @@
 from typing import (
-  Any, 
-  Annotated, 
-  Callable, 
+  Any,
+  Callable,
   Generator,
-  TypedDict, 
-  Sequence, 
-  Literal,
   Optional,
+  Sequence,
 )
 
-from langchain.prompts import PromptTemplate, ChatPromptTemplate
-from langchain_core.messages import (
-  BaseMessage, 
-  AIMessage, 
-  SystemMessage, 
-  HumanMessage,
-)
-from langchain_core.runnables.config import RunnableConfig
-from langchain_core.runnables import RunnableSequence
-from langchain_core.vectorstores.base import VectorStore
-from langchain_core.documents.base import Document
-
-
-from langgraph.graph.message import add_messages
-from langgraph.graph import StateGraph, END
-from langgraph.graph.state import CompiledStateGraph
-
-from databricks_langchain import DatabricksVectorSearch, ChatDatabricks
-from databricks_langchain.vector_search_retriever_tool import VectorSearchRetrieverTool
-
-from pydantic import BaseModel, Field
 
 import mlflow
+from databricks_langchain import ChatDatabricks, DatabricksVectorSearch
+from langchain.prompts import PromptTemplate
+from langchain_core.documents.base import Document
+from langchain_core.messages import (
+    BaseMessage,
+)
+from langchain_core.runnables.config import RunnableConfig
+from langchain_core.vectorstores.base import VectorStore
+from langgraph.graph import StateGraph
+from langgraph.graph.state import CompiledStateGraph
+from mlflow.langchain.chat_agent_langgraph import ChatAgentState
 from mlflow.models import ModelConfig
 from mlflow.pyfunc import ChatAgent
 from mlflow.types.agent import (
@@ -40,7 +27,6 @@ from mlflow.types.agent import (
     ChatAgentResponse,
     ChatContext,
 )
-from mlflow.langchain.chat_agent_langgraph import ChatAgentState, ChatAgentToolNode
 
 
 class AgentState(ChatAgentState):
@@ -122,7 +108,7 @@ def draft_email_factory(config: ModelConfig) -> Callable[[AgentState, RunnableCo
     tone: str = config.get("configurable", {}).get("tone", "professional")
     context: str = format_context(state["context"])
 
-    llm: BaseChatModel = ChatDatabricks(endpoint=model_name)
+    llm: LanguageModelLike = ChatDatabricks(endpoint=model_name)
 
     prompt_template: PromptTemplate = (
       PromptTemplate.from_template(prompt)

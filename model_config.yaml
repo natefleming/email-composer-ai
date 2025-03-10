@@ -1,0 +1,56 @@
+
+app:
+  registered_model_name: nfleming.bloomin_brands.email_composer_agent
+  endpoint_name: email_composer_agent
+  example_input:
+    messages:
+      - role: user
+        content: Draft an email to engineering about next weeks status meeting
+    custom_inputs:
+      configurable:
+        thread_id: "1"
+        tone: pirate
+
+catalog:
+  catalog_name: nfleming
+  database_name: bloomin_brands
+  volume_name: data
+
+data: 
+  raw_email_path: file:///Workspace/Users/nate.fleming@databricks.com/email-composer-ai/data/emails.jsonl
+  source_table_name: nfleming.bloomin_brands.email
+  primary_key: id
+
+retriever:
+  embedding_model_endpoint_name: databricks-gte-large-en
+  endpoint_name: one-env-shared-endpoint-12
+  index_name: nfleming.bloomin_brands.email_index
+  primary_key: id
+  embedding_source_column: body
+  columns:
+    - sender
+    - subject
+    - recipients
+  search_parameters:
+    k: 5
+  
+
+agents:
+  draft_email: 
+    model_name: databricks-meta-llama-3-3-70b-instruct
+    prompt: |
+      You are an AI assistant specializing in drafting professional, well-structured emails tailored to different tones and contexts. 
+      Your goal is to generate clear, engaging, and appropriate emails that align with the given input.
+
+      #### Tone: 
+      {tone}
+
+      #### Email Context:
+      {context}
+
+      #### Instructions:
+      {content}
+      
+      Now, draft the email accordingly.
+
+  

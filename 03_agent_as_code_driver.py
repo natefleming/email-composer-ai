@@ -35,41 +35,26 @@ _ = load_dotenv(find_dotenv())
 
 # MAGIC %%writefile agent_as_code.py
 # MAGIC from typing import (
-# MAGIC   Any, 
-# MAGIC   Annotated, 
-# MAGIC   Callable, 
+# MAGIC   Any,
+# MAGIC   Callable,
 # MAGIC   Generator,
-# MAGIC   TypedDict, 
-# MAGIC   Sequence, 
-# MAGIC   Literal,
 # MAGIC   Optional,
+# MAGIC   Sequence,
 # MAGIC )
 # MAGIC
-# MAGIC
-# MAGIC from langchain.prompts import PromptTemplate, ChatPromptTemplate
-# MAGIC from langchain_core.language_models import LanguageModelLike
-# MAGIC from langchain_core.messages import (
-# MAGIC   BaseMessage, 
-# MAGIC   AIMessage, 
-# MAGIC   SystemMessage, 
-# MAGIC   HumanMessage,
-# MAGIC )
-# MAGIC from langchain_core.runnables.config import RunnableConfig
-# MAGIC from langchain_core.runnables import RunnableSequence
-# MAGIC from langchain_core.vectorstores.base import VectorStore
-# MAGIC from langchain_core.documents.base import Document
-# MAGIC from langchain_core.language_models import LanguageModelLike
-# MAGIC
-# MAGIC from langgraph.graph.message import add_messages
-# MAGIC from langgraph.graph import StateGraph, END
-# MAGIC from langgraph.graph.state import CompiledStateGraph
-# MAGIC
-# MAGIC from databricks_langchain import DatabricksVectorSearch, ChatDatabricks
-# MAGIC from databricks_langchain.vector_search_retriever_tool import VectorSearchRetrieverTool
-# MAGIC
-# MAGIC from pydantic import BaseModel, Field
 # MAGIC
 # MAGIC import mlflow
+# MAGIC from databricks_langchain import ChatDatabricks, DatabricksVectorSearch
+# MAGIC from langchain.prompts import PromptTemplate
+# MAGIC from langchain_core.documents.base import Document
+# MAGIC from langchain_core.messages import (
+# MAGIC     BaseMessage,
+# MAGIC )
+# MAGIC from langchain_core.runnables.config import RunnableConfig
+# MAGIC from langchain_core.vectorstores.base import VectorStore
+# MAGIC from langgraph.graph import StateGraph
+# MAGIC from langgraph.graph.state import CompiledStateGraph
+# MAGIC from mlflow.langchain.chat_agent_langgraph import ChatAgentState
 # MAGIC from mlflow.models import ModelConfig
 # MAGIC from mlflow.pyfunc import ChatAgent
 # MAGIC from mlflow.types.agent import (
@@ -78,7 +63,6 @@ _ = load_dotenv(find_dotenv())
 # MAGIC     ChatAgentResponse,
 # MAGIC     ChatContext,
 # MAGIC )
-# MAGIC from mlflow.langchain.chat_agent_langgraph import ChatAgentState, ChatAgentToolNode
 # MAGIC
 # MAGIC
 # MAGIC class AgentState(ChatAgentState):
@@ -261,6 +245,7 @@ except Exception:
 
 # COMMAND ----------
 
+from typing import Any
 from agent_as_code import app, config
 
 example_input: dict[str, Any] = config.get("app").get("example_input")
@@ -269,6 +254,7 @@ app.predict(example_input)
 
 # COMMAND ----------
 
+from typing import Any
 from agent_as_code import app, config
 
 example_input: dict[str, Any] = config.get("app").get("example_input")
@@ -279,8 +265,7 @@ for event in app.predict_stream(example_input):
 # COMMAND ----------
 
 import mlflow
-from agent_as_code import config #tools, LLM_ENDPOINT_NAME
-
+from agent_as_code import config 
 
 from databricks_langchain import VectorSearchRetrieverTool
 

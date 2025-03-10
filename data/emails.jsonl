@@ -1,0 +1,10 @@
+{"subject": "Meeting Reminder", "body": "Don't forget our team meeting at 10 AM tomorrow.", "sender": "manager@example.com", "recipients": ["employee1@example.com", "employee2@example.com"]}
+{"subject": "Project Update", "body": "The latest project updates have been shared in the document link below.", "sender": "lead@example.com", "recipients": ["team@example.com"]}
+{"subject": "Invoice #12345", "body": "Please find the attached invoice for your recent purchase.", "sender": "billing@example.com", "recipients": ["customer@example.com"]}
+{"subject": "Happy Birthday!", "body": "Wishing you a wonderful birthday filled with joy and success.", "sender": "hr@example.com", "recipients": ["employee3@example.com"]}
+{"subject": "Security Alert", "body": "We've detected a login attempt from an unrecognized device.", "sender": "security@example.com", "recipients": ["user1@example.com"]}
+{"subject": "Weekly Newsletter", "body": "Check out our latest updates and offers in this week's newsletter.", "sender": "news@example.com", "recipients": ["subscriber1@example.com", "subscriber2@example.com"]}
+{"subject": "New Feature Announcement", "body": "We're excited to introduce a new feature to enhance your experience.", "sender": "product@example.com", "recipients": ["customer@example.com"]}
+{"subject": "Job Opportunity", "body": "We have a new job opening that matches your skills. Apply today!", "sender": "recruiter@example.com", "recipients": ["candidate@example.com"]}
+{"subject": "System Maintenance Notification", "body": "Our system will undergo maintenance on Saturday from 2 AM to 4 AM.", "sender": "it-support@example.com", "recipients": ["all@example.com"]}
+{"subject": "RSVP for the Annual Gala", "body": "You're invited to our Annual Gala! Please RSVP by Friday.", "sender": "events@example.com", "recipients": ["vip@example.com", "guest@example.com"]}

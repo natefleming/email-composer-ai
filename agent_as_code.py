@@ -17,6 +17,7 @@ from langchain_core.messages import (
   HumanMessage,
 )
 from langchain_core.runnables.config import RunnableConfig
+from langchain_core.runnables import RunnableSequence
 from langchain_core.vectorstores.base import VectorStore
 from langchain_core.documents.base import Document
 
@@ -42,14 +43,8 @@ from mlflow.types.agent import (
 from mlflow.langchain.chat_agent_langgraph import ChatAgentState, ChatAgentToolNode
 
 
-model_config_file: str = "model_config.yaml"
-config: ModelConfig = ModelConfig(development_config=model_config_file)
-
-
 class AgentState(ChatAgentState):
-  #messages: Annotated[Sequence[BaseMessage], add_messages]
   context: Sequence[Document]
-
 
 
 def retrieve_email_context_factory(config: ModelConfig) -> Callable[[AgentState, RunnableConfig], dict[str, str]]:
@@ -96,16 +91,17 @@ def format_context(context: Sequence[Document]) -> str:
   for document in context:
     document: Document
     formatted_email: str = f"""
-      ###
+      ####
       Sender: {document.metadata["sender"]}
       Subject: {document.metadata["subject"]}
       Body: {document.page_content}
     """
     formatted_context.append(formatted_email)
   if len(formatted_context) > 0:
-    formatted_context.append("###")
+    formatted_context.append("####")
 
   return "\n".join(formatted_context)
+
   
 def draft_email_factory(config: ModelConfig) -> Callable[[AgentState, RunnableConfig], dict[str, str]]:
 
@@ -124,7 +120,6 @@ def draft_email_factory(config: ModelConfig) -> Callable[[AgentState, RunnableCo
     content: str = last_message.content if isinstance(last_message, BaseMessage) else last_message["content"]
 
     tone: str = config.get("configurable", {}).get("tone", "professional")
-    topic: str = "engineering"
     context: str = format_context(state["context"])
 
     llm: BaseChatModel = ChatDatabricks(endpoint=model_name)
@@ -137,7 +132,6 @@ def draft_email_factory(config: ModelConfig) -> Callable[[AgentState, RunnableCo
       {
           "content": lambda x: x["content"],
           "tone": lambda x: x["tone"],
-          "topic": lambda x: x["topic"],
           "context": lambda x: x["context"]
       }
       | prompt_template
@@ -148,7 +142,6 @@ def draft_email_factory(config: ModelConfig) -> Callable[[AgentState, RunnableCo
       {
         "content": content,
         "tone": tone,
-        "topic": topic,
         "context": context
       }
     )
@@ -207,6 +200,9 @@ class LangGraphChatAgent(ChatAgent):
                   ChatAgentChunk(**{"delta": msg}) for msg in node_data.get("messages", [])
               )
 
+
+model_config_file: str = "model_config.yaml"
+config: ModelConfig = ModelConfig(development_config=model_config_file)
 
 graph: CompiledStateGraph = create_graph(config)
 app: ChatAgent = LangGraphChatAgent(graph)

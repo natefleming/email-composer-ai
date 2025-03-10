@@ -45,7 +45,9 @@ _ = load_dotenv(find_dotenv())
 # MAGIC   Optional,
 # MAGIC )
 # MAGIC
+# MAGIC
 # MAGIC from langchain.prompts import PromptTemplate, ChatPromptTemplate
+# MAGIC from langchain_core.language_models import LanguageModelLike
 # MAGIC from langchain_core.messages import (
 # MAGIC   BaseMessage, 
 # MAGIC   AIMessage, 
@@ -53,9 +55,10 @@ _ = load_dotenv(find_dotenv())
 # MAGIC   HumanMessage,
 # MAGIC )
 # MAGIC from langchain_core.runnables.config import RunnableConfig
+# MAGIC from langchain_core.runnables import RunnableSequence
 # MAGIC from langchain_core.vectorstores.base import VectorStore
 # MAGIC from langchain_core.documents.base import Document
-# MAGIC
+# MAGIC from langchain_core.language_models import LanguageModelLike
 # MAGIC
 # MAGIC from langgraph.graph.message import add_messages
 # MAGIC from langgraph.graph import StateGraph, END
@@ -157,7 +160,7 @@ _ = load_dotenv(find_dotenv())
 # MAGIC     tone: str = config.get("configurable", {}).get("tone", "professional")
 # MAGIC     context: str = format_context(state["context"])
 # MAGIC
-# MAGIC     llm: BaseChatModel = ChatDatabricks(endpoint=model_name)
+# MAGIC     llm: LanguageModelLike = ChatDatabricks(endpoint=model_name)
 # MAGIC
 # MAGIC     prompt_template: PromptTemplate = (
 # MAGIC       PromptTemplate.from_template(prompt)
